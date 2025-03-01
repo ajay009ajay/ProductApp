@@ -13,7 +13,9 @@ struct ProductAppApp: App {
         WindowGroup {
             NavigationView {
                 CategoriesView(
-                    viewModel: CategoriesViewModel(apiClient: ApiClient())
+                    viewModel: CategoriesViewModel(
+                        apiClient: ApiClient(urlSession: URLSession.shared)
+                    )
                 )
             }
         }

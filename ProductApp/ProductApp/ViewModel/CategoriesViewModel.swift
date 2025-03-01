@@ -11,16 +11,18 @@ import Foundation
 class CategoriesViewModel: ObservableObject {
     @Published var categories: [CategoryModel] = []
 
-    private let apiClient: ApiClient
+    private let apiClient: NetworkServiceProtocol
 
-    init(apiClient: ApiClient) {
+    init(apiClient: NetworkServiceProtocol) {
         self.apiClient = apiClient
     }
 
     @MainActor
     func loadCategories() async {
         do {
-            categories = try await apiClient.getCategories()
+            if let categoriesData = try await apiClient.getCategories() {
+                categories = categoriesData
+            }
         } catch {
             print(error)
         }

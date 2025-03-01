@@ -8,12 +8,14 @@ import SwiftUI
 
 struct ProductsView: View {
     @StateObject var viewModel: ProductViewModel
-    
+
     var body: some View {
         List(viewModel.products) { product in
             NavigationLink(product.title, destination: ProductView(product: product))
         }.onAppear {
-            viewModel.loadProducts()
+            Task {
+                await viewModel.loadProducts()
+            }
         }.toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
                 Menu(content: {
@@ -35,6 +37,7 @@ struct ProductsView: View {
                 }, label: {Text("Sort")})
             }
         }
+        .navigationTitle(viewModel.categoryName)
     }
 }
 

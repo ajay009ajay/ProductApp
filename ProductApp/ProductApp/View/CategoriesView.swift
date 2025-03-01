@@ -17,7 +17,7 @@ struct CategoriesView: View {
                     destination: ProductsView(
                         viewModel: ProductViewModel(
                             category: category,
-                            apiClient: ApiClient()
+                            apiClient: ApiClient(urlSession: URLSession.shared)
                         )
                     )
                 )

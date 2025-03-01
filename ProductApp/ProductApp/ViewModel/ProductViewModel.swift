@@ -10,23 +10,27 @@ import Foundation
 class ProductViewModel: ObservableObject {
     @Published var products: [ProductModel] = []
     private let category: CategoryModel
+    var categoryName: String {
+        category.name
+    }
 
-    private let apiClient: ApiClient
+    private let apiClient: NetworkServiceProtocol
 
-    
-    init(category: CategoryModel, apiClient: ApiClient) {
+
+    init(category: CategoryModel, apiClient: NetworkServiceProtocol) {
         self.category = category
         self.apiClient = apiClient
     }
 
-    func loadProducts() {
-        Task {
-            products = []
-            do {
-                products = try await apiClient.getProducts(inCategory: category)
-            } catch {
-                print(error)
+    @MainActor
+    func loadProducts() async {
+        products = []
+        do {
+            if let productsData = try await apiClient.getProducts(inCategory: category) {
+                products = productsData
             }
+        } catch {
+            print(error)
         }
     }
 }
